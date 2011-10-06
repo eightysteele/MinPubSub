@@ -44,14 +44,14 @@ YUI({ filter: 'raw' }).use("node", "console", "test" , function (Y) {
 		testHasSub : function () {
 			var Assert = Y.Assert;
 		
-			window.publish("/some/topic");
+			window.mps.publish(window.mps.create("/some/topic", "", {}));
 
 			Assert.areEqual(1, this.count);   
 		},
 		testNoSub : function () {
 			var Assert = Y.Assert;
 		
-			window.publish("/bogus/topic");
+			window.mps.publish(window.mps.create("/bogus/topic", "", {}));
 
 			Assert.areEqual(0, this.count);       
 		}
@@ -68,8 +68,8 @@ YUI({ filter: 'raw' }).use("node", "console", "test" , function (Y) {
 		testAddSub : function () {
 			var Assert = Y.Assert,
 				func = function(){};
-		
-			window.subscribe("/some/topic", func);
+
+			window.mps.subscribe("/some/topic", func);
 			
 			Assert.areEqual(func, c_["/some/topic"][0]);
 		}
@@ -90,14 +90,14 @@ YUI({ filter: 'raw' }).use("node", "console", "test" , function (Y) {
 		testRemoveSub : function () {
 			var Assert = Y.Assert;
 		
-			window.unsubscribe(["/some/topic", this.func]);
+			window.mps.unsubscribe(["/some/topic", this.func]);
 
 			Assert.areNotEqual(this.func, c_["/some/topic"][0]);
 		},
 		testRemoveSubTwoArgs : function () {
 			var Assert = Y.Assert;
 
-			window.unsubscribe("/some/topic", this.func);
+			window.mps.unsubscribe("/some/topic", this.func);
 
 			Assert.areNotEqual(this.func, c_["/some/topic"][0]);
 		}

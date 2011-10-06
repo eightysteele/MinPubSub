@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+  <script src="minpubsub.src.js"></script>
+</head>
+<body>
+  <script>    
+    // Create a custom event using the Event constructor
+    var event = new mps.Event('MyEvent', 'click', {x:1, y:2});
+
+    // Or create a custom event using the create function
+    event = mps.create('MyEvent', 'click', {x:1, y:2});
+
+    // Subscribe to 'MyEvent'
+    mps.subscribe(
+        'MyEvent', 
+        function(event) {
+            var data = event.getData(),
+                x = data.x,
+                y = data.y,
+                type = event.getType(),
+                action = event.getAction(),
+                msg = [type, action, 'x=' + x, 'y=' + y].join(',');
+
+            console.log(msg);
+            document.body.innerText = msg;
+        }
+    );
+
+    // Publish the event!
+    mps.publish(event);
+  </script>
+</body>
+</html>

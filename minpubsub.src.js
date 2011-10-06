@@ -5,11 +5,12 @@
 */
 
 (function(d){
+    var cache = d.c_ || {}, // topic/subscription hash, check for "c_" cache for unit testing
+        publish = null,
+        subscribe = null,
+        unsubscribe = null;
 
-	// the topic/subscription hash
-	var cache = d.c_ || {}; //check for "c_" cache for unit testing
-	
-	d.publish = function(/* String */ topic, /* Array? */ args){
+	publish = function(/* String */ topic, /* Array? */ args){
 		// summary: 
 		//		Publish some data on a named topic.
 		// topic: String
@@ -33,7 +34,7 @@
 		}
 	};
 
-	d.subscribe = function(/* String */ topic, /* Function */ callback){
+	subscribe = function(/* String */ topic, /* Function */ callback){
 		// summary:
 		//		Register a callback on a named topic.
 		// topic: String
@@ -56,7 +57,7 @@
 		return [topic, callback]; // Array
 	};
 
-	d.unsubscribe = function(/* Array */ handle, /* Function? */ callback){
+	unsubscribe = function(/* Array */ handle, /* Function? */ callback){
 		// summary:
 		//		Disconnect a subscribed function for a topic.
 		// handle: Array
@@ -75,5 +76,37 @@
 			}
 		}
 	};
+
+    d.mps = {};
+
+    d.mps.Event = function(type, action, data) {
+        if (!(this instanceof d.mps.Event)) {
+            return new d.mps.Event(type, action, data);
+        }
+        this.getType = function() {
+            return type;
+        };
+        this.getAction = function() {
+            return action;
+        };
+        this.getData = function() {
+            return data;
+        };
+        return this;
+    };
+
+    d.mps.create = function(type, action, data) {
+        return new d.mps.Event(type, action, data);
+    };
+        
+    d.mps.publish = function(event) {
+        publish(event.getType(), [event]);
+    };
+
+    d.mps.subscribe = function(eventType, eventHandler) {
+        subscribe(eventType, eventHandler);
+    };
+
+    d.mps.unsubscribe = unsubscribe;
 
 })(this);
